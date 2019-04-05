@@ -34,11 +34,15 @@ int main() {
 	c.r = 128; //первый цвет градиента
 	c.g = 16;
 	c.b = 77;
+	unsigned char R = c.r;
+	unsigned char G = c.g;
+	unsigned char B = c.b;
+
 
 	float rr = 255;// второй цвет градиента
 	float gg = 46;
 	float bb = 99;
-	float step = 100;// кол-во шагов тут какие ограничения???? Я ставлю 200 и все ломается
+	float step = 100;// кол-во шагов 
 
 	float stepR = (rr - c.r) / step;
 	float stepG = (gg - c.g) / step;
