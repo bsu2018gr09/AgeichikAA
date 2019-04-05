@@ -53,57 +53,71 @@ int main() {
 	int tmp{ 0 };
 	int W = 100; //координаты точек из которыз будет начинаться градиент
 	int H = 200;
-	for (int i = 1; i <= H; ++i) {
-		tmp = 0;
-		if ((step - H + i) > 0)
-			tmp = step - H + i;
-		for (int j = 1; j <= w; ++j) {
-			if (((W - j - tmp) < 0) && (j < W)) {
+	int x = H - step / 2;
+	int y = W - step / 2;
+	for (int i = 1; i <= x; ++i) {
+		for (int j = 1; j <= w; ++j)
+			ggg.write((char *)&c, 3);
+	}
+
+	
+	for (int i = x + 1; i < step + x + 1; i++) {
+	if (y > 0) {
+		
+			for (int j = 1; j <= y; j++) {
+				ggg.write((char *)&c, 3);
+			}
+			for (int z = (y + 1); z <= (y + 1 + step); z++) {
 				t.g += stepG;
 				t.r += stepR;
 				t.b += stepB;
 				c.r = (unsigned char)t.r;
 				c.g = (unsigned char)t.g;
 				c.b = (unsigned char)t.b;
+				ggg.write((char *)&c, 3);
 			}
-			else if (((j - W - tmp) < 0) && (j > W)) {
-				t.g -= stepG;
-				t.r -= stepR;
-				t.b -= stepB;
-				c.r = (unsigned char)t.r;
-				c.g = (unsigned char)t.g;
-				c.b = (unsigned char)t.b;
-			}
-			ggg.write((char *)&c, 3); //запись сразу всего цвета
+			c.r = R;
+			c.g = G;
+			c.b = B;
+			t.r = R;
+			t.g = G;
+			t.b = B;
+
+			for (int p = (y + 2 + step); p <= w; p++)
+				ggg.write((char *)&c, 3);
+
+
 		}
+	
+	else {
+		for (int z = 1; z <= y + 1 + step; z++) {
+			if (z > w)
+				break;
+			t.g += stepG;
+			t.r += stepR;
+			t.b += stepB;
+			c.r = (unsigned char)t.r;
+			c.g = (unsigned char)t.g;
+			c.b = (unsigned char)t.b;
+			ggg.write((char *)&c, 3);
+		}
+		c.r = R;
+		c.g = G;
+		c.b = B;
+		t.r = R;
+		t.g = G;
+		t.b = B;
+
+		for (int p = (y + 2 + step); p <= w; p++)
+			ggg.write((char *)&c, 3);
 
 	}
-	for (int i = H + 1; i <= h; ++i) {
-		tmp = 0;
-		if ((step + H - i) > 0)
-			tmp = step + H - i;
-		for (int j = 1; j <= w; ++j) {
-			if ((W - j - tmp) < 0 && (j < W)) {
-				t.g += stepG; //  чтобы получать точное значение (например если трижды прибавить 0,34 и затем присвоим c.r значение увеличиться на 1 )
-				t.r += stepR;
-				t.b += stepB;
-				c.r = (unsigned char)t.r;
-				c.g = (unsigned char)t.g;
-				c.b = (unsigned char)t.b;
-			}
-			else if (((j - W - tmp) < 0) && (j > W)) {
-				t.g -= stepG;
-				t.r -= stepR;
-				t.b -= stepB;
-				c.r = (unsigned char)t.r;
-				c.g = (unsigned char)t.g;
-				c.b = (unsigned char)t.b;
-			}
-			ggg.write((char *)&c, 3); //запись сразу всего цвета
-		}
-
+	
 	}
-
+	for (int i = x+step+1; i <= h; ++i) {
+		for (int j = 1; j <= w; ++j)
+			ggg.write((char *)&c, 3);
+	}
 	fff.close();//закрыли файл
 	ggg.close();//закрыли файл
 	return 1;
