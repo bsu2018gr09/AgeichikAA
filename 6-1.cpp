@@ -61,10 +61,10 @@ public:
 	Time(type a, type b = 0, type c = 0) :H{ 0 }, M{ 0 }, S{ 0 }//список иницилизации 
 	{
 
-		type tmp{ 0 };
-		H = a;
-		M = b;
-		S = c;
+		type tmp{ 0 }; //зачем?
+		H = a;//зачем чем плох список инициализации??????
+		M = b;//зачем?
+		S = c;//зачем?
 		check(*this);
 		cout << "constreu" << '\n';
 	}
@@ -104,11 +104,11 @@ public:
 		this->H = c.H;
 		this->M = c.M;
 		this->S = c.S;
-		check(*this);//проверяем чтоб время было возможного формата
+		check(*this);//проверяем чтоб время было возможного формата Оппа????? А как он мог стать плохим???? Мы же не дали возможность его менять пользователю!!!! Только через сеттеры и конструкторы. А там мы проверяем!!!!
 		return *this;
 	}
 	Time  operator = ( const type a)//присваиваем число
-	{
+	{//проще через конструктор!!!! Он все сделает за нас!!!!
 		H = a;
 		M = a;
 		S = a;
@@ -187,9 +187,9 @@ public:
 		os >> c.H;
 		os >> c.M;
 		os >> c.S;
-		const type secMax = 60;
-		const type minMax = 60;
-		const type hrMax = 23;
+		const type secMax = 60;//для чего????
+		const type minMax = 60;//для чего????
+		const type hrMax = 23;//для чего????
 		type mp;
 		check(c);
 		return os;
