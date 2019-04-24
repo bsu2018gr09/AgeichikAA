@@ -10,37 +10,72 @@
 using namespace std;
 typedef int type;
 
-class Time {//нигде не вижу использования const!!!!
+class Time {
 private:
 	type H;
 	type M;
 	type S;
+	static void check(Time &c) {
+		const type secMax = 60;
+		const type minMax = 60;
+		const type hrMax = 23;
+		type mp;
+		if (c.S > secMax) {
+			mp = c.S / secMax;
+			c.M += mp;
+			c.S = c.S % secMax;
+		}
+		if (c.M > minMax) {
+			mp = c.M / minMax;
+			c.H += mp;
+			c.M = c.M % minMax;
+		}
+		if (c.H > hrMax)
+			c.H = c.H % hrMax;
+	}
+	void checkMinus(Time &c) {
+		const type secMax = 60;
+		const type minMax = 60;
+		const type hrMax = 23;
+		type mp;
+		if (c.S < 0) {
 
+			--c.M;
+			c.S = abs(c.S);
+		}
+		if (c.M < 0) {
+			mp = c.M / minMax;
+			--c.H;
+			c.M = abs(c.M);
+		}
+		if (c.H < 0)
+			c.H = abs(c.H);
+	}
 public:
 	//конструктор по умолчанию
 	Time() :H{ 0 }, M{ 0 }, S{ 0 }//список иницилизации 
 	{ cout << "defolt constuctor" << '\n'; }
 
-	
+
 
 	Time(type a, type b = 0, type c = 0) :H{ 0 }, M{ 0 }, S{ 0 }//список иницилизации 
 	{
-		
+
 		type tmp{ 0 };
-		H = a; 
+		H = a;
 		M = b;
-		S = c; 
+		S = c;
 		check(*this);
-		cout << "constreu" << '\n'; 
+		cout << "constreu" << '\n';
 	}
-	~Time() { std::cout << "Work destructor for" << H << " " << M <<" "<<S<< '\n'; };
+	~Time() { std::cout << "Work destructor for" << H << " " << M << " " << S << '\n'; };
 	void SetH(type t) { //чтоб не было больше 23 часов(в сутках больше быть не может) 
 		const type hrMax = 23;
 		if (t > hrMax)
 			H = t % hrMax;
 		else
 			H = t;
-		
+
 	};
 	type GetH() { return H; };
 	void SetM(type t) {
@@ -65,122 +100,70 @@ public:
 			S = t;
 	};
 	type GetS() { return S; };
-	const Time&  operator = (const Time& c) { 
+	const Time&  operator = (const Time& c) {
 		this->H = c.H;
 		this->M = c.M;
 		this->S = c.S;
 		check(*this);//проверяем чтоб время было возможного формата
 		return *this;
 	}
-	Time  operator = (type a)//присваиваем число
-	{ 		H = a;
+	Time  operator = ( const type a)//присваиваем число
+	{
+		H = a;
 		M = a;
 		S = a;
 		check(*this);
 
 		return (*this);
 	}
-	void check(Time &c) {//ф-я проверки а что она делает в public???????
-		const type secMax = 60;
-		const type minMax = 60;
-		const type hrMax = 23;
-		type mp;
-		if (c.S > secMax) {
-			mp = c.S / secMax;
-			c.M += mp;
-			c.S = c.S % secMax;
-		}
-		if (c.M > minMax) {
-			mp = c.M / minMax;
-			c.H += mp;
-			c.M = c.M % minMax;
-		}
-		if (c.H > hrMax)
-			c.H = c.H % hrMax;
+	
+	Time  operator + (const Time c) {
+
+		Time tmp{c.H+H,c.M + M, c.S + S };
+		check(tmp);
+		return (tmp);
 	}
-	void checkMinus(Time &c) {//а что она делает в public???????
-		const type secMax = 60;
-		const type minMax = 60;
-		const type hrMax = 23;
-		type mp;
-		if (c.S <0) {
-			
-			--c.M ;
-			c.S = abs(c.S);
-		}
-		if (c.M <0) {
-			mp = c.M / minMax;
-			--c.H;
-			c.M = abs(c.M);
-		}
-		if (c.H <0)
-			c.H = abs(c.H);
+	Time  operator + (const type c) {
+
+		Time tmp{ c + H,c + M, c + S };
+		check(tmp);
+		return (tmp);
 	}
-	Time  operator + (Time c) { 
+	Time operator *(const Time c) {
+		Time tmp{ c.H * H,c.M * M, c.S * S };
 		
-		Time tmp;// а что конструктор с параметрами запрещено использовать????
-		tmp.S = c.S+S;
-		tmp.M = c.M+M;
-		tmp.H = c.H+H;
-		check(tmp);
-		return (tmp);
-	}
-	Time  operator + (type c) { 
-
-		Time tmp;// а что конструктор с параметрами запрещено использовать????
-		tmp.S = c + S;
-		tmp.M = c + M;
-		tmp.H = c + H;
-		check(tmp);
-		return (tmp);
-	}
-	Time operator *(Time c) {  
-		Time tmp;// а что конструктор с параметрами запрещено использовать????
-		type mp;
-		tmp.S = c.S * S;
-		tmp.M = c.M * M;
-		tmp.H = c.H * H;
 		check(tmp);
 
 		return (tmp);
 	}
-	Time operator *(type c) {
-		Time tmp;// а что конструктор с параметрами запрещено использовать????
-		type mp;
-		tmp.S = c * S;
-		tmp.M = c * M;
-		tmp.H = c * H;
+	Time operator *(const type c) {
+		Time tmp{ c* H,c* M,c* S };
 		check(tmp);
 		return (tmp);
 	}
-	Time  operator - (Time c) { 
+	Time  operator - (const Time c) {
 
-		Time tmp;// а что конструктор с параметрами запрещено использовать????
-		tmp.S = S-c.S;
-		tmp.M = M-c.M;
-		tmp.H = H-c.H;
+		Time tmp{ H - c.H,M - c.M, S - c.S };
 		checkMinus(tmp);
 		return (tmp);
 	}Time  operator - (type c) {
-		Time tmp;// а что конструктор с параметрами запрещено использовать????
-		tmp.S = S-c;
-		tmp.M = M-c;
-		tmp.H = H-c;
+		Time tmp{ H - c,M - c, S - c };
 		checkMinus(tmp);
 		return (tmp);
 	}
-	Time  operator / (Time c) { 
+	Time  operator / (const Time c) {
 
 		Time tmp;
-		if(c.S)
-		tmp.S = S/c.S;
-		if(c.M)
-		tmp.M = M/c.M;
-		if(c.H)
-		tmp.H = H/c.H;
+		if (c.S)
+			tmp.S = S / c.S;
+		if (c.M)
+			tmp.M = M / c.M;
+		if (c.H)
+			tmp.H = H / c.H;
 		checkMinus(tmp);
 		return (tmp);
-	}Time  operator / (type c) { 
+	}
+	Time  operator / (const type c) {
 
 		Time tmp;
 		if (c) {
@@ -193,9 +176,9 @@ public:
 		checkMinus(tmp);
 		return (tmp);
 	}
-	friend ostream& operator << (ostream & os, Time c) 
+	friend ostream& operator << (ostream & os, const Time c)
 	{
-		os<<"Time" << c.H << ':' << c.M << ':' << c.S;
+		os << "Time" << c.H << ':' << c.M << ':' << c.S;
 		return os;
 	}
 	friend istream& operator >> (istream & os, Time &c)
@@ -203,26 +186,15 @@ public:
 		cout << '\n' << "Введите время";
 		os >> c.H;
 		os >> c.M;
-		os>> c.S;
+		os >> c.S;
 		const type secMax = 60;
 		const type minMax = 60;
 		const type hrMax = 23;
 		type mp;
-		if (c.S > secMax) {//этот код я уже встречал. Значит его надо в отдельную функцию!!!
-			mp = c.S / secMax;
-			c.M += mp;
-			c.S = c.S % secMax;
-		}
-		if (c.M > minMax) {
-			mp = c.M / minMax;
-			c.H += mp;
-			c.M = c.M % minMax;
-		}
-		if (c.H > hrMax)
-			c.H = c.H % hrMax;
+		check(c);
 		return os;
 	}
-	bool operator > (Time c) {
+	bool operator > (const Time c) {
 		if (H > c.H)
 			return true;
 		else if (H < c.H)
@@ -235,14 +207,14 @@ public:
 			else {
 				if (S > c.S)
 					return true;
-				else  
+				else
 					return false;
 
 			}
 		}
 
 	}
-	bool operator < (Time c) {
+	bool operator < (const Time c) {
 		if (H < c.H)
 			return true;
 		else if (H > c.H)
@@ -262,14 +234,14 @@ public:
 		}
 
 	}
-	bool operator ==(Time c) {
+	bool operator ==(const Time c) {
 		if ((H == c.H) && (M == c.M) && (S == c.S))
 			return true;
 		else
 			return false;
 	}
 	string getPeriod() {//выводим что хранится в объекте
-		
+
 		if (H < 4)
 			return "Ночь";
 		else if (H < 10)
@@ -292,16 +264,16 @@ public:
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	const int n{10};
-	Time c{0,59,1};
+	const int n{ 10 };
+	Time c{ 0,59,1 };
 
-	Time a{0,58,0};//иницилизируем
-	Time b{0,68,25};
+	Time a{ 0,58,0 };//иницилизируем
+	Time b{ 0,68,25 };
 	Time w;
-	Time m{a};//иницилизируем уже сущ объктом
-	cout <<"m=a"<< m;
+	Time m{ a };//иницилизируем уже сущ объктом
+	cout << "m=a" << m;
 	w = a + b;
-	cout<<"w=a+b" << w;
+	cout << "w=a+b" << w;
 	w = a + 5;
 	cout << "w=a+5" << w;
 	w = b - a;
@@ -319,25 +291,28 @@ int main()
 		exit;
 	}
 	for (int i = 0; i < n; ++i) {
-		*(arrr +i) = Time{i,i+58,i};
-		cout << *(arrr+i);
+		*(arrr + i) = Time{ i,i + 58,i };
+		cout << *(arrr + i);
 	}
 	cout << '\n' << '\n';
-	cout<<'\n'<<"Bool "<<(*(arrr + 5)>*(arrr + 6))<<' ';
-	cout<<'\n'<<"Bool "<<(*(arrr + 5)<*(arrr + 6))<<' ';
+	cout << '\n' << "Bool " << (*(arrr + 5) > *(arrr + 6)) << ' ';
+	cout << '\n' << "Bool " << (*(arrr + 5) < *(arrr + 6)) << ' ';
 	Time *ptr = new (nothrow) Time;
 	if (!ptr) {
 		cout << "very bad";
 		exit;
 	}
 	*ptr = Time{ 25,61,62 };
-	cout << ptr<<' '<<(*ptr);
-	cout<<c.getPeriod();
-	
-	
-	Time e{9,25,65};
+	cout << ptr << ' ' << (*ptr);
+	cout << c.getPeriod();
+
+
+	Time e{ 9,25,65 };
 	cout << e.getPeriod();
 	cin >> e;
+	cout << e.getPeriod()<<'\n';
+	Time haha{ 15, 25, 36 };
+	cout << e + haha,'\n';
 	cout << e;
-     
+
 }
