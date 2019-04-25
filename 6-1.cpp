@@ -15,7 +15,7 @@ private:
 	type H;
 	type M;
 	type S;
-	static void check(Time &c) {
+	static void check(Time &c) {// хочу УСЛЫШАТЬ на паре обоснование зачем тут static
 		const type secMax = 60;
 		const type minMax = 60;
 		const type hrMax = 23;
@@ -33,7 +33,7 @@ private:
 		if (c.H > hrMax)
 			c.H = c.H % hrMax;
 	}
-	void checkMinus(Time &c) {
+	void checkMinus(Time &c) {// хочу УСЛЫШАТЬ на паре обоснование почему тут НЕ static
 		const type secMax = 60;
 		const type minMax = 60;
 		const type hrMax = 23;
