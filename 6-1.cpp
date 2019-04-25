@@ -1,4 +1,4 @@
-﻿// 6-11.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+// 6-11.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 /*
 Класс время. Операция - вывести что сейчас хранится в объекте: сейчас утро, день,вечер или ночь.
@@ -57,14 +57,8 @@ public:
 	{ cout << "defolt constuctor" << '\n'; }
 
 
-
-	Time(type a, type b = 0, type c = 0) :H{ 0 }, M{ 0 }, S{ 0 }//список иницилизации 
-	{
-
-		type tmp{ 0 }; //зачем?
-		H = a;//зачем чем плох список инициализации??????
-		M = b;//зачем?
-		S = c;//зачем?
+	Time(type a, type b = 0, type c = 0) :H{ a }, M{ b }, S{ c }//список иницилизации 
+	{		
 		check(*this);
 		cout << "constreu" << '\n';
 	}
@@ -104,17 +98,7 @@ public:
 		this->H = c.H;
 		this->M = c.M;
 		this->S = c.S;
-		check(*this);//проверяем чтоб время было возможного формата Оппа????? А как он мог стать плохим???? Мы же не дали возможность его менять пользователю!!!! Только через сеттеры и конструкторы. А там мы проверяем!!!!
 		return *this;
-	}
-	Time  operator = ( const type a)//присваиваем число
-	{//проще через конструктор!!!! Он все сделает за нас!!!!
-		H = a;
-		M = a;
-		S = a;
-		check(*this);
-
-		return (*this);
 	}
 	
 	Time  operator + (const Time c) {
@@ -122,6 +106,43 @@ public:
 		Time tmp{c.H+H,c.M + M, c.S + S };
 		check(tmp);
 		return (tmp);
+	}
+	Time  operator += (const Time c) {
+
+		this->H +=c.H;
+		this->M += c.M;
+		this->S += c.S;
+		check(*this);
+		return *this;
+			
+	}
+	Time  operator -= (const Time c) {
+
+		this->H -= c.H;
+		this->M -= c.M;
+		this->S -= c.S;
+		checkMinus(*this);
+		return *this;
+
+	}
+	Time  operator *= (const Time c) {
+
+		this->H *= c.H;
+		this->M *= c.M;
+		this->S *= c.S;
+		check(*this);
+		return *this;
+
+	}
+	Time  operator /= (const Time c) {
+		if(c.H)
+		this->H /= c.H;
+		if (c.M)
+		this->M /= c.M;
+		if (c.S)
+		this->S /= c.S;
+		return *this;
+
 	}
 	Time  operator + (const type c) {
 
@@ -187,10 +208,6 @@ public:
 		os >> c.H;
 		os >> c.M;
 		os >> c.S;
-		const type secMax = 60;//для чего????
-		const type minMax = 60;//для чего????
-		const type hrMax = 23;//для чего????
-		type mp;
 		check(c);
 		return os;
 	}
@@ -313,6 +330,14 @@ int main()
 	cout << e.getPeriod()<<'\n';
 	Time haha{ 15, 25, 36 };
 	cout << e + haha,'\n';
+	Time hahaha = 156;
+	
 	cout << e;
+	Time nnn{ 15,25,69 };
+	Time mmm{ 23,55,85 };
+	mmm += nnn;
+	cout<<"MMMM=" << mmm;
+	mmm /= nnn;
+	cout << "MMMM=" << mmm;
 
 }
