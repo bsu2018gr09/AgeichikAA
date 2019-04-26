@@ -3,7 +3,6 @@
 /*
 Класс время. Операция - вывести что сейчас хранится в объекте: сейчас утро, день,вечер или ночь.
 */
-
 #include "pch.h"
 #include <iostream>
 #include<string>
@@ -15,11 +14,24 @@ private:
 	type H;
 	type M;
 	type S;
-	static void check(Time &c) {// хочу УСЛЫШАТЬ на паре обоснование зачем тут static
+		void check(Time &c) {
 		const type secMax = 60;
 		const type minMax = 60;
 		const type hrMax = 23;
 		type mp;
+		while (c.S < 0) {
+
+			--c.M;
+			c.S = abs(c.S);
+		}
+		while (c.M < 0) {
+			mp = c.M / minMax;
+			--c.H;
+			c.M = abs(c.M);
+		}
+		if (c.H < 0)
+			c.H = abs(c.H);
+		
 		if (c.S > secMax) {
 			mp = c.S / secMax;
 			c.M += mp;
@@ -33,7 +45,7 @@ private:
 		if (c.H > hrMax)
 			c.H = c.H % hrMax;
 	}
-	void checkMinus(Time &c) {// хочу УСЛЫШАТЬ на паре обоснование почему тут НЕ static
+	void checkMinus(Time &c) {
 		const type secMax = 60;
 		const type minMax = 60;
 		const type hrMax = 23;
@@ -58,7 +70,7 @@ public:
 
 
 	Time(type a, type b = 0, type c = 0) :H{ a }, M{ b }, S{ c }//список иницилизации 
-	{		
+	{
 		check(*this);
 		cout << "constreu" << '\n';
 	}
@@ -100,21 +112,21 @@ public:
 		this->S = c.S;
 		return *this;
 	}
-	
+
 	Time  operator + (const Time c) {
 
-		Time tmp{c.H+H,c.M + M, c.S + S };
+		Time tmp{ c.H + H,c.M + M, c.S + S };
 		check(tmp);
 		return (tmp);
 	}
 	Time  operator += (const Time c) {
 
-		this->H +=c.H;
+		this->H += c.H;
 		this->M += c.M;
 		this->S += c.S;
 		check(*this);
 		return *this;
-			
+
 	}
 	Time  operator -= (const Time c) {
 
@@ -135,12 +147,12 @@ public:
 
 	}
 	Time  operator /= (const Time c) {
-		if(c.H)
-		this->H /= c.H;
+		if (c.H)
+			this->H /= c.H;
 		if (c.M)
-		this->M /= c.M;
+			this->M /= c.M;
 		if (c.S)
-		this->S /= c.S;
+			this->S /= c.S;
 		return *this;
 
 	}
@@ -152,7 +164,7 @@ public:
 	}
 	Time operator *(const Time c) {
 		Time tmp{ c.H * H,c.M * M, c.S * S };
-		
+
 		check(tmp);
 
 		return (tmp);
@@ -202,13 +214,13 @@ public:
 		os << "Time" << c.H << ':' << c.M << ':' << c.S;
 		return os;
 	}
-	friend istream& operator >> (istream & os, Time &c)
+	friend istream& operator >> (istream & os,  Time &  c)
 	{
 		cout << '\n' << "Введите время";
 		os >> c.H;
 		os >> c.M;
 		os >> c.S;
-		check(c);
+		c.check(c);
 		return os;
 	}
 	bool operator > (const Time c) {
@@ -327,17 +339,19 @@ int main()
 	Time e{ 9,25,65 };
 	cout << e.getPeriod();
 	cin >> e;
-	cout << e.getPeriod()<<'\n';
+	cout << e.getPeriod() << '\n';
 	Time haha{ 15, 25, 36 };
-	cout << e + haha,'\n';
+	cout << e + haha, '\n';
 	Time hahaha = 156;
-	
+
 	cout << e;
 	Time nnn{ 15,25,69 };
 	Time mmm{ 23,55,85 };
 	mmm += nnn;
-	cout<<"MMMM=" << mmm;
+	cout << "MMMM=" << mmm;
 	mmm /= nnn;
 	cout << "MMMM=" << mmm;
-
+	Time aaaa{ a };
+	cout << '\n' << "a=" << a;
+	cout << '\n' << "aaaa=" << aaaa;
 }
