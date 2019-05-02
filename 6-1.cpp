@@ -1,8 +1,3 @@
-// 6-11.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-/*
-Класс время. Операция - вывести что сейчас хранится в объекте: сейчас утро, день,вечер или ночь.
-*/
 #include "pch.h"
 #include <iostream>
 #include<string>
@@ -17,37 +12,44 @@ private:
 		void check(Time &c) {
 		const type secMax = 60;
 		const type minMax = 60;
-		const type hrMax = 23;
+		const type hrMax = 24;
 		type mp;
-		while (c.S < 0) {
-
-			--c.M;
+		if (c.S < 0) {
+			mp = 1 + abs(c.S / secMax);
+			c.M -= mp;
 			c.S = abs(c.S);
+			c.S = c.S % (secMax);
+			c.S = secMax - c.S;
 		}
-		while (c.M < 0) {
-			mp = c.M / minMax;
-			--c.H;
+		if (c.M < 0) {
+			mp = 1 + abs(c.M / minMax);
+			c.H -= mp;
 			c.M = abs(c.M);
+			c.M = c.M % (minMax);
+			c.M = minMax  - c.M;
 		}
-		if (c.H < 0)
+		if (c.H < 0) {
 			c.H = abs(c.H);
-		
-		if (c.S > secMax) {
-			mp = c.S / secMax;
+			c.H = c.H % (hrMax);
+			c.H = hrMax  - c.H;
+		}
+
+		if (c.S > (secMax-1)) {
+			mp = c.S / (secMax);
 			c.M += mp;
-			c.S = c.S % secMax;
+			c.S = c.S % (secMax);
 		}
-		if (c.M > minMax) {
-			mp = c.M / minMax;
+		if (c.M > (minMax-1)) {
+			mp = c.M / (minMax);
 			c.H += mp;
-			c.M = c.M % minMax;
+			c.M = c.M % (minMax);
 		}
-		if (c.H > hrMax)
-			c.H = c.H % hrMax;
+		if (c.H > (hrMax-1))
+			c.H = c.H % (hrMax);
 	}
-	void checkMinus(Time &c) {
-		const type secMax = 60;
-		const type minMax = 60;
+	/*void checkMinus(Time &c) {
+		const type secMax = 59;
+		const type minMax = 59;
 		const type hrMax = 23;
 		type mp;
 		if (c.S < 0) {
@@ -56,19 +58,21 @@ private:
 			c.S = abs(c.S);
 		}
 		if (c.M < 0) {
-			mp = c.M / minMax;
+			mp = c.M / (minMax+1);
 			--c.H;
 			c.M = abs(c.M);
 		}
 		if (c.H < 0)
 			c.H = abs(c.H);
-	}
+	}*/
 public:
 	//конструктор по умолчанию
 	Time() :H{ 0 }, M{ 0 }, S{ 0 }//список иницилизации 
 	{ cout << "defolt constuctor" << '\n'; }
 
-
+	//Time(const Time& c) :H{ c.H }, M{ c.M }, S{ c.S }{	}
+		
+	
 	Time(type a, type b = 0, type c = 0) :H{ a }, M{ b }, S{ c }//список иницилизации 
 	{
 		check(*this);
@@ -83,9 +87,9 @@ public:
 			H = t;
 
 	};
-	type GetH() { return H; };
+	type GetH() const { return H; };
 	void SetM(type t) {
-		const type minMax = 60;
+		const type minMax = 59;
 		if (t > minMax) {
 			type tmp = t / minMax;
 			H += tmp;
@@ -94,9 +98,10 @@ public:
 		else
 			M = t;
 	};
-	type GetM() { return M; };
-	const type secMax = 60;
+	type GetM() const { return M; };
+	
 	void SetS(type t) {
+		const type secMax = 59;
 		if (t > secMax) {
 			type tmp = t / secMax;
 			M += tmp;
@@ -105,19 +110,20 @@ public:
 		else
 			S = t;
 	};
-	type GetS() { return S; };
-	const Time&  operator = (const Time& c) {
+	type GetS() const { return S; };
+	 Time&  operator = (const Time& c) {
 		this->H = c.H;
 		this->M = c.M;
 		this->S = c.S;
 		return *this;
 	}
 
-	Time  operator + (const Time c) {
+	Time  operator + (const Time c)  {
 
 		Time tmp{ c.H + H,c.M + M, c.S + S };
 		check(tmp);
 		return (tmp);
+
 	}
 	Time  operator += (const Time c) {
 
@@ -133,7 +139,7 @@ public:
 		this->H -= c.H;
 		this->M -= c.M;
 		this->S -= c.S;
-		checkMinus(*this);
+		check(*this);
 		return *this;
 
 	}
@@ -177,11 +183,11 @@ public:
 	Time  operator - (const Time c) {
 
 		Time tmp{ H - c.H,M - c.M, S - c.S };
-		checkMinus(tmp);
+		check(tmp);
 		return (tmp);
 	}Time  operator - (type c) {
 		Time tmp{ H - c,M - c, S - c };
-		checkMinus(tmp);
+		check(tmp);
 		return (tmp);
 	}
 	Time  operator / (const Time c) {
@@ -189,11 +195,17 @@ public:
 		Time tmp;
 		if (c.S)
 			tmp.S = S / c.S;
+		else
+			tmp.S = S;
 		if (c.M)
 			tmp.M = M / c.M;
+		else
+			tmp.M = M;
 		if (c.H)
 			tmp.H = H / c.H;
-		checkMinus(tmp);
+		else
+			tmp.H = H;
+		check(tmp);
 		return (tmp);
 	}
 	Time  operator / (const type c) {
@@ -206,7 +218,7 @@ public:
 
 			tmp.H = H / c;
 		}
-		checkMinus(tmp);
+		check(tmp);
 		return (tmp);
 	}
 	friend ostream& operator << (ostream & os, const Time c)
@@ -216,14 +228,14 @@ public:
 	}
 	friend istream& operator >> (istream & os,  Time &  c)
 	{
-		cout << '\n' << "Введите время";
+		
 		os >> c.H;
 		os >> c.M;
 		os >> c.S;
 		c.check(c);
 		return os;
 	}
-	bool operator > (const Time c) {
+	bool operator > (const Time c)  {
 		if (H > c.H)
 			return true;
 		else if (H < c.H)
@@ -292,66 +304,71 @@ public:
 
 int main()
 {
-	setlocale(LC_ALL, "Russian");
-	const int n{ 10 };
-	Time c{ 0,59,1 };
-
-	Time a{ 0,58,0 };//иницилизируем
-	Time b{ 0,68,25 };
-	Time w;
-	Time m{ a };//иницилизируем уже сущ объктом
-	cout << "m=a" << m;
-	w = a + b;
-	cout << "w=a+b" << w;
-	w = a + 5;
-	cout << "w=a+5" << w;
-	w = b - a;
-	cout << "w=b-a" << w;
-	w = a * b;
-	cout << "w=a*b" << w;
-	w = a * 5;
-	cout << "w=a*5" << w;
-	w = a / b;
-	cout << "w=a/b" << w;
-	Time arr[n];
-	Time *arrr = new(nothrow) Time[n];
-	if (!arrr) {
-		cout << "very bad";
-		exit;
-	}
-	for (int i = 0; i < n; ++i) {
-		*(arrr + i) = Time{ i,i + 58,i };
-		cout << *(arrr + i);
-	}
-	cout << '\n' << '\n';
-	cout << '\n' << "Bool " << (*(arrr + 5) > *(arrr + 6)) << ' ';
-	cout << '\n' << "Bool " << (*(arrr + 5) < *(arrr + 6)) << ' ';
-	Time *ptr = new (nothrow) Time;
-	if (!ptr) {
-		cout << "very bad";
-		exit;
-	}
-	*ptr = Time{ 25,61,62 };
-	cout << ptr << ' ' << (*ptr);
-	cout << c.getPeriod();
+	Time a{ 23,59,0 };
+	Time b{ 0,0,100};
+	Time c{ -1,-1,-1 };
+	cout << "haha " << c;
+	//setlocale(LC_ALL, "Russian");
+	//const int n{ 10 };
+	//Time c{ a };
 
 
-	Time e{ 9,25,65 };
-	cout << e.getPeriod();
-	cin >> e;
-	cout << e.getPeriod() << '\n';
-	Time haha{ 15, 25, 36 };
-	cout << e + haha, '\n';
-	Time hahaha = 156;
+	//Time a{ 0,58,0 };//иницилизируем
+	//Time b{ 0,68,25 };
+	//Time w;
+	//Time m{ a };//иницилизируем уже сущ объктом
+	//cout << "m=a" << m;
+	//w = a + b;
+	//cout << "w=a+b" << w;
+	//w = a + 5;
+	//cout << "w=a+5" << w;
+	//w = b - a;
+	//cout << "w=b-a" << w;
+	//w = a * b;
+	//cout << "w=a*b" << w;
+	//w = a * 5;
+	//cout << "w=a*5" << w;
+	//w = a / b;
+	//cout << "w=a/b" << w;
+	//Time arr[n];
+	//Time *arrr = new(nothrow) Time[n];
+	//if (!arrr) {
+	//	cout << "very bad";
+	//	exit;
+	//}
+	//for (int i = 0; i < n; ++i) {
+	//	*(arrr + i) = Time{ i,i + 58,i };
+	//	cout << *(arrr + i);
+	//}
+	//cout << '\n' << '\n';
+	//cout << '\n' << "bool " << (*(arrr + 5) > *(arrr + 6)) << ' ';
+	//cout << '\n' << "bool " << (*(arrr + 5) < *(arrr + 6)) << ' ';
+	//Time *ptr = new (nothrow) Time;
+	//if (!ptr) {
+	//	cout << "very bad";
+	//	exit;
+	//}
+	//*ptr = Time{ 25,61,62 };
+	//cout << ptr << ' ' << (*ptr);
+	//cout << c.getPeriod();
 
-	cout << e;
-	Time nnn{ 15,25,69 };
-	Time mmm{ 23,55,85 };
-	mmm += nnn;
-	cout << "MMMM=" << mmm;
-	mmm /= nnn;
-	cout << "MMMM=" << mmm;
-	Time aaaa{ a };
-	cout << '\n' << "a=" << a;
-	cout << '\n' << "aaaa=" << aaaa;
+
+	//Time e{ 9,25,65 };
+	//cout << e.getPeriod();
+	//cin >> e;
+	//cout << e.getPeriod() << '\n';
+	//Time haha{ 15, 25, 36 };
+	//cout << e + haha, '\n';
+	//Time hahaha = 156;
+	
+	//cout << e;
+	//Time nnn{ 15,25,69 };
+	//Time mmm{ 23,55,85 };
+	//mmm += nnn;
+	//cout << "MMMM=" << mmm;
+	//mmm /= nnn;
+	//cout << "MMMM=" << mmm;
+	//Time aaaa{ a };
+	//cout << '\n' << "a=" << a;
+	//cout << '\n' << "aaaa=" << c;
 }
