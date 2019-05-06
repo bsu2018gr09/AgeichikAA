@@ -184,6 +184,6 @@ int main()
 	cout << '\n';
 	cout << '\n';
 	cout << '\n';
-	secondshg(arr, n);
+	secondshg(arr, n);//это что????
 	free_array(arr, cnt);
 }
