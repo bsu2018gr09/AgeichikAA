@@ -307,9 +307,9 @@ int main()
 	Time a{ 23,59,0 };
 	Time b{ 0,0,100};
 	Time c{ -1,-1,-1 };
-	cout << "haha " << c;
-	//setlocale(LC_ALL, "Russian");
-	//const int n{ 10 };
+	cout << "haha " << c; //посмотри вывод
+	setlocale(LC_ALL, "Russian");
+	const int n{ 10 };
 	//Time c{ a };
 
 
