@@ -1,9 +1,10 @@
 /*В строке найти слова, содержащие цифры, расположенные подряд, и заменить их **…. Вставить перед такими словами заданную подстроку*/
 
-#include "pch.h"
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <clocale>
 #include<cstring>
+#include <Windows.h>//обязательно для setConsole
 using namespace std;
 
 char *giveMemory(int n) {
@@ -65,26 +66,26 @@ int fff(char *s, int *arr) {//заменяем цифру * и находим т
 				}
 			}
 		}
-			if (*s == ' ') {
-					if (flag) {// т.е если в слове были две подряд цифры то запоминаем номер  куда надо вставлять подстроку
-					if (word)
+		if (*s == ' ') {
+			if (flag) {// т.е если в слове были две подряд цифры то запоминаем номер  куда надо вставлять подстроку
+				if (word)
 					*arr = word;
-					arr++;
-					cout << 'j' << '\n';
-					flag = 0;
-					cnt++;
-				}
-				word = i;
+				arr++;
+				cout << 'j' << '\n';
+				flag = 0;
+				cnt++;
 			}
-			s++;
+			word = i;
 		}
-		if (flag) {
-			*arr = word;
-			arr++;
-		}
-		*arr = len;// последний элемент массива будет длина строки
-		return cnt;
+		s++;
 	}
+	if (flag) {
+		*arr = word;
+		arr++;
+	}
+	*arr = len;// последний элемент массива будет длина строки
+	return cnt;
+}
 void printarr(int *arr, int n) {
 	for (int i = 0; i < n; ++i) {
 		cout << *(arr + i) << '\n';
@@ -102,7 +103,7 @@ void subStr(char *s, char *rez, int begin, int end)//выделяет из ст�
 	strncpy(rez, s, kol);
 	rez[kol] = '\0';
 }
-void insps(char *s, char *supers,  char *pstr, int *arr, int cnt) {
+void insps(char *s, char *supers, char *pstr, int *arr, int cnt) {
 	int a = strlen(s);
 	int f = strlen(supers);
 	char *t = '\0';
@@ -115,19 +116,19 @@ void insps(char *s, char *supers,  char *pstr, int *arr, int cnt) {
 	}
 	else //если две цифры в первом слове
 		insStr(supers, 0, pstr);
-	
+
 	int i{ 1 };
 	//cout << *(arr + 1) << "   " << a;
 	while (1) {
 		if (*(arr + 1) == (a)) {//берем последний кусок из строки
-			subStr(s, tmp, *arr, *(arr + 1)+1);
+			subStr(s, tmp, *arr, *(arr + 1) + 1);
 			insStr(supers, *arr + i * n, tmp);
 			*(supers + a + i * n) = '\0';
 			break;
 		}
-		subStr(s, tmp, *arr, *(arr+1));
-		insStr(supers, *arr+i*n, tmp);
-		insStr(supers, *arr + i * n + *(arr+1)-*arr, pstr);
+		subStr(s, tmp, *arr, *(arr + 1));
+		insStr(supers, *arr + i * n, tmp);
+		insStr(supers, *arr + i * n + *(arr + 1) - *arr, pstr);
 		arr++;
 		i++;
 	}
@@ -135,6 +136,8 @@ void insps(char *s, char *supers,  char *pstr, int *arr, int cnt) {
 
 int main()
 {
+	SetConsoleCP(1251); // Ввод с консоли в кодировке 1251
+	SetConsoleOutputCP(1251); // Вывод на консоль в кодировке
 	const int N{ 30 };
 	const int MAX{ 100 };
 	char buf[MAX], buf2[MAX];
@@ -143,34 +146,25 @@ int main()
 	cin.getline(buf, MAX);
 	char * str = new(nothrow) char[strlen(buf) + 1];
 	strcpy(str, buf);
-	cout<<"please enter second line";
-	cin.getline(buf2,MAX);
+	cout << "please enter second line";
+	cin.getline(buf2, MAX);
 	char * pstr = new(nothrow) char[strlen(buf2) + 1];
 	strcpy(pstr, buf2);
 	int *arr = giveMemoryInt(N);//будем хранить номера куда надо вставить подстроку
 	initArrNull(arr, N);
-	int cnt=fff(str, arr);
+	int cnt = fff(str, arr);
 	int n = strlen(pstr);
 	int lens = strlen(str);
 	char *supers = new(nothrow) char[lens + n * cnt];
 	cout << "new arr" << '\n';
 	//printarr(arr, N);
-	if(cnt)
-	insps(str, supers, pstr, arr, cnt);
+	if (cnt)
+		insps(str, supers, pstr, arr, cnt);
+	else
+		strcpy(supers, str);
 	cout << supers;
 	freeMemory(arr);
-    freeMemory(str);
+	freeMemory(str);
 	freeMemory(pstr);
 
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
