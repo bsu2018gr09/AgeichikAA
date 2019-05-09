@@ -120,17 +120,6 @@ void secondshg(char **arr, char n) {
 
 	int cnt = 0;
 
-	if (!gggg)
-	{
-		cout << "No file D:\VisualStudio project\Sherlock\sher.txt. Can't create\n";
-		exit(1);
-	}
-	if (!ffff)
-	{
-		cout << " file D:\VisualStudio project\Sherlock\text2.txt. Can't open\n";
-		exit(1);
-	}
-
 	while (1) // второй раз прохожу и вставляю слова
 	{
 		ffff.getline(buff, N - 1); //читаем ПОСТРОЧНО.
@@ -184,6 +173,6 @@ int main()
 	cout << '\n';
 	cout << '\n';
 	cout << '\n';
-	secondshg(arr, n);//это что????
+	secondshg(arr, n);//это что???? Здесь прохожу по тексту второй раз и расставляю слова в нужном мне порядке
 	free_array(arr, cnt);
 }
