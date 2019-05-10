@@ -1,5 +1,6 @@
 /*В строке найти слова, содержащие цифры, расположенные подряд, и заменить их **…. Вставить перед такими словами заданную подстроку*/
 
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <clocale>
@@ -47,7 +48,7 @@ int fff(char *s, int *arr) {//заменяем цифру * и находим т
 //	int i{ 0 };
 	char flag = 0;
 	int i{ 0 };
-	while (*s) {
+	for (int g = 0;g <= len; g++) {
 		i++;
 		if ((*s > 47) && (*s < 58)) {
 			s++;
@@ -103,6 +104,24 @@ void subStr(char *s, char *rez, int begin, int end)//выделяет из ст�
 	strncpy(rez, s, kol);
 	rez[kol] = '\0';
 }
+void delStr(char *s, int begin, int kol)//удаляет из строки  s,  начиная с символа begin,  kol символов.
+{
+   char *dest = s+ begin, *from=s+ begin+kol;
+  //strcpy(p,q);// так- ПЛОХО. Если строки p и q перекрываются, то поведение функции strcpy() не определено!!!!
+
+   /*можно ручками скопировать*/
+//   while ( *dest++ = *from++ ); ++*dest = '\0';
+   /*можно использовать С++ STL*/
+ //  copy(from,s+strlen(s)+1,dest);
+   /* можно как в С*/
+   memmove(dest,from,s+strlen(s)+1-from);
+}
+void inL(char* str) {
+char tmp[]=" ";
+	int n = strlen(str);
+	insStr(str, n, tmp);
+
+}
 void insps(char *s, char *supers, char *pstr, int *arr, int cnt) {
 	int a = strlen(s);
 	int f = strlen(supers);
@@ -121,10 +140,13 @@ void insps(char *s, char *supers, char *pstr, int *arr, int cnt) {
 	//cout << *(arr + 1) << "   " << a;
 	while (1) {
 		if (*(arr + 1) == (a)) {//берем последний кусок из строки
+
 			subStr(s, tmp, *arr, *(arr + 1) + 1);
 			insStr(supers, *arr + i * n, tmp);
 			*(supers + a + i * n) = '\0';
+
 			break;
+
 		}
 		subStr(s, tmp, *arr, *(arr + 1));
 		insStr(supers, *arr + i * n, tmp);
@@ -144,8 +166,10 @@ int main()
 	char *massOfWords[N];
 	cout << "please enter line ";
 	cin.getline(buf, MAX);
-	char * str = new(nothrow) char[strlen(buf) + 1];
+
+	char * str = new(nothrow) char[strlen(buf) + 2];
 	strcpy(str, buf);
+	inL(str);
 	cout << "please enter second line";
 	cin.getline(buf2, MAX);
 	char * pstr = new(nothrow) char[strlen(buf2) + 1];
@@ -156,12 +180,14 @@ int main()
 	int n = strlen(pstr);
 	int lens = strlen(str);
 	char *supers = new(nothrow) char[lens + n * cnt];
-	cout << "new arr" << '\n';
-	//printarr(arr, N);
+	//cout << "new arr" << '\n';
+	printarr(arr, N);
 	if (cnt)
 		insps(str, supers, pstr, arr, cnt);
 	else
 		strcpy(supers, str);
+	n=	strlen(str);
+    delStr(str,n,1);
 	cout << supers;
 	freeMemory(arr);
 	freeMemory(str);
