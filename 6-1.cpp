@@ -1,4 +1,5 @@
-#include "pch.h"
+// ConsoleApplication5.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+//
 #include <iostream>
 #include<string>
 using namespace std;
@@ -9,7 +10,7 @@ private:
 	type H;
 	type M;
 	type S;
-		void check(Time &c) {
+	void check(Time &c) {
 		const type secMax = 60;
 		const type minMax = 60;
 		const type hrMax = 24;
@@ -26,25 +27,25 @@ private:
 			c.H -= mp;
 			c.M = abs(c.M);
 			c.M = c.M % (minMax);
-			c.M = minMax  - c.M;
+			c.M = minMax - c.M;
 		}
 		if (c.H < 0) {
 			c.H = abs(c.H);
 			c.H = c.H % (hrMax);
-			c.H = hrMax  - c.H;
+			c.H = hrMax - c.H;
 		}
 
-		if (c.S > (secMax-1)) {
+		if (c.S > (secMax - 1)) {
 			mp = c.S / (secMax);
 			c.M += mp;
 			c.S = c.S % (secMax);
 		}
-		if (c.M > (minMax-1)) {
+		if (c.M > (minMax - 1)) {
 			mp = c.M / (minMax);
 			c.H += mp;
 			c.M = c.M % (minMax);
 		}
-		if (c.H > (hrMax-1))
+		if (c.H > (hrMax - 1))
 			c.H = c.H % (hrMax);
 	}
 	/*void checkMinus(Time &c) {
@@ -53,7 +54,6 @@ private:
 		const type hrMax = 23;
 		type mp;
 		if (c.S < 0) {
-
 			--c.M;
 			c.S = abs(c.S);
 		}
@@ -70,9 +70,9 @@ public:
 	Time() :H{ 0 }, M{ 0 }, S{ 0 }//список иницилизации 
 	{ cout << "defolt constuctor" << '\n'; }
 
-	//Time(const Time& c) :H{ c.H }, M{ c.M }, S{ c.S }{	}
-		
-	
+	Time(const Time& c) :H{ c.H }, M{ c.M }, S{ c.S }{}
+
+
 	Time(type a, type b = 0, type c = 0) :H{ a }, M{ b }, S{ c }//список иницилизации 
 	{
 		check(*this);
@@ -99,7 +99,7 @@ public:
 			M = t;
 	};
 	type GetM() const { return M; };
-	
+
 	void SetS(type t) {
 		const type secMax = 59;
 		if (t > secMax) {
@@ -110,22 +110,30 @@ public:
 		else
 			S = t;
 	};
+
 	type GetS() const { return S; };
-	 Time&  operator = (const Time& c) {
+	
+	Time&  operator = (const Time& c) {
+		this->H = c.H;
+		this->M = c.M;
+		this->S = c.S;
+		return *this;
+	}
+	Time&  operator = (const Time&& c) {
 		this->H = c.H;
 		this->M = c.M;
 		this->S = c.S;
 		return *this;
 	}
 
-	Time  operator + (const Time c)  {
+	Time  operator + (const Time& c) {
 
 		Time tmp{ c.H + H,c.M + M, c.S + S };
 		check(tmp);
 		return (tmp);
 
 	}
-	Time  operator += (const Time c) {
+	Time  operator += (const Time& c) {
 
 		this->H += c.H;
 		this->M += c.M;
@@ -134,7 +142,7 @@ public:
 		return *this;
 
 	}
-	Time  operator -= (const Time c) {
+	Time  operator -= (const Time& c) {
 
 		this->H -= c.H;
 		this->M -= c.M;
@@ -143,7 +151,7 @@ public:
 		return *this;
 
 	}
-	Time  operator *= (const Time c) {
+	Time  operator *= (const Time& c) {
 
 		this->H *= c.H;
 		this->M *= c.M;
@@ -152,7 +160,7 @@ public:
 		return *this;
 
 	}
-	Time  operator /= (const Time c) {
+	Time  operator /= (const Time& c) {
 		if (c.H)
 			this->H /= c.H;
 		if (c.M)
@@ -168,7 +176,7 @@ public:
 		check(tmp);
 		return (tmp);
 	}
-	Time operator *(const Time c) {
+	Time operator *(const Time& c) {
 		Time tmp{ c.H * H,c.M * M, c.S * S };
 
 		check(tmp);
@@ -180,7 +188,7 @@ public:
 		check(tmp);
 		return (tmp);
 	}
-	Time  operator - (const Time c) {
+	Time  operator - (const Time& c) {
 
 		Time tmp{ H - c.H,M - c.M, S - c.S };
 		check(tmp);
@@ -190,7 +198,7 @@ public:
 		check(tmp);
 		return (tmp);
 	}
-	Time  operator / (const Time c) {
+	Time  operator / (const Time& c) {
 
 		Time tmp;
 		if (c.S)
@@ -221,21 +229,21 @@ public:
 		check(tmp);
 		return (tmp);
 	}
-	friend ostream& operator << (ostream & os, const Time c)
+	friend ostream& operator << (ostream & os, const Time& c)
 	{
-		os << "Time" << c.H << ':' << c.M << ':' << c.S;
+		os  << c.H << ':' << c.M << ':' << c.S;
 		return os;
 	}
-	friend istream& operator >> (istream & os,  Time &  c)
+	friend istream& operator >> (istream & os, Time &  c)
 	{
-		
+
 		os >> c.H;
 		os >> c.M;
 		os >> c.S;
 		c.check(c);
 		return os;
 	}
-	bool operator > (const Time c)  {
+	bool operator > (const Time& c) {
 		if (H > c.H)
 			return true;
 		else if (H < c.H)
@@ -255,7 +263,7 @@ public:
 		}
 
 	}
-	bool operator < (const Time c) {
+	bool operator < (const Time& c) {
 		if (H < c.H)
 			return true;
 		else if (H > c.H)
@@ -275,7 +283,7 @@ public:
 		}
 
 	}
-	bool operator ==(const Time c) {
+	bool operator ==(const Time& c) {
 		if ((H == c.H) && (M == c.M) && (S == c.S))
 			return true;
 		else
@@ -304,12 +312,14 @@ public:
 
 int main()
 {
-	Time a{ 23,59,0 };
-	Time b{ 0,0,100};
-	Time c{ -1,-1,-1 };
-	cout << "haha " << c; //посмотри вывод
 	setlocale(LC_ALL, "Russian");
-	const int n{ 10 };
+	Time a{ 23,59,0 };
+	Time b{ 0,0,100 };
+	Time c{ -1,-1,-1 };
+	c = a + b;
+	cout << c;
+	
+	
 	//Time c{ a };
 
 
@@ -360,7 +370,7 @@ int main()
 	//Time haha{ 15, 25, 36 };
 	//cout << e + haha, '\n';
 	//Time hahaha = 156;
-	
+
 	//cout << e;
 	//Time nnn{ 15,25,69 };
 	//Time mmm{ 23,55,85 };
@@ -371,4 +381,5 @@ int main()
 	//Time aaaa{ a };
 	//cout << '\n' << "a=" << a;
 	//cout << '\n' << "aaaa=" << c;
+	system("pause");
 }
