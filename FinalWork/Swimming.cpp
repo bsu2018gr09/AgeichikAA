@@ -8,7 +8,7 @@
 #include <fstream>
 #include <cstring>
 #include"Swimming.h"
-#include <Windows.h>//обязательно для setConsole
+#include <Windows.h>////РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ setConsole
 char f[] = "D:\\VisualStudio project\\7-1\\file.txt";
 
 
@@ -188,7 +188,7 @@ type averageTime(Swimming *arr, int n) {
 }
 Swimming* Swim(Swimming* arr, int n, int idS, int &c)
 {
-	//idS - какого заплыва резултатты
+	//idS - РєР°РєРѕРіРѕ Р·Р°РїР»С‹РІР° СЂРµР·СѓР»С‚Р°С‚С‚С‹
 
 	c = cntId(arr, n, idS);
 
@@ -294,7 +294,7 @@ int findCnt() {
 	fff.close();
 	return cnt;
 }
-void changeById(int id, int t) {//добавляет ко всем элементам в файле с заданныи id  заданное кол-во секунд
+void changeById(int id, int t) {//РґРѕР±Р°РІР»СЏРµС‚ РєРѕ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј РІ С„Р°Р№Р»Рµ СЃ Р·Р°РґР°РЅРЅС‹Рё id  Р·Р°РґР°РЅРЅРѕРµ РєРѕР»-РІРѕ СЃРµРєСѓРЅРґ
 	ifstream fff(f);
 	int a{ 0 };
 	int cnt = findCnt();
