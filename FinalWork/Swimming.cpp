@@ -8,8 +8,8 @@
 #include <fstream>
 #include <cstring>
 #include"Swimming.h"
-#include <Windows.h>////обязательно для setConsole
-char f[] = "D:\\VisualStudio project\\7-1\\file.txt";
+#include <Windows.h>//обязательно для setConsole
+char f[] = "D:\\VisualStudio project\\7-1\\filye.txt";
 
 
 void randArr(Swimming *arr, int n, int cntid);
@@ -202,12 +202,16 @@ void printArr(Swimming *arr, int cnt)
 	for (int i = 0; i < cnt; ++i)
 		cout << arr[i] << '\n';
 }
-
+void addElFile(Swimming& n) {
+	ofstream fff(f, ios::app);
+	fff << n;
+	fff.close();
+}
 int cntId(Swimming *arr, int n)
 {
 	int cnt{ 1 };
 	int tmp = arr[0].GetId();
-	for (int i = 1; i < n; ++i)
+	for (int i = 0; i < n; ++i)
 	{
 		if (arr[i].GetId() != tmp)
 		{
@@ -220,17 +224,23 @@ int cntId(Swimming *arr, int n)
 }
 Swimming * ResSwim(Swimming *arr, int n, int &cnt, type &aver)
 {
+	bool f(false);
 	aver = averageTime(arr, n);
-	sortById(arr, 0, n - 1);
+	sortById(arr, 0, n -1);
 	//printArr(arr, n);
 	//cnt = cntId(arr, n);
 	Swimming* win = giveMemory<Swimming>(cnt * 3);
 	Swimming win1;
 	Swimming win2;
 	Swimming win3;
+	//const char *t = giveMemory<char>(10);
+	//t = "undefind";
 	win3.SetTime(1000000);
 	win2.SetTime(1000000);
 	win1.SetTime(1000000);
+	//win3.SetSurname(t);
+	//win2.SetSurname(t);
+	//win1.SetSurname(t);
 	int j{ 0 };
 	int tmp{ 0 };
 	for (int i = 0; i < cnt; ++i)
@@ -238,6 +248,9 @@ Swimming * ResSwim(Swimming *arr, int n, int &cnt, type &aver)
 		win3.SetTime(1000000);
 		win2.SetTime(1000000);
 		win1.SetTime(1000000);
+		win3.SetId(0);
+		win2.SetId(0);
+		win1.SetId(0);
 
 		tmp = arr[j].GetId();
 		while (arr[j].GetId() == tmp)
@@ -257,14 +270,24 @@ Swimming * ResSwim(Swimming *arr, int n, int &cnt, type &aver)
 				else
 					win3 = arr[j];
 			}
+
 			++j;
+			if (j > cnt) {
+				f = 1;
+				break;
+			}
+			
 
 		}
-		tmp = arr[j].GetId();
+		
 		win[i * 3 + 0] = win1;
 		win[i * 3 + 1] = win2;
 		win[i * 3 + 2] = win3;
+		if (f)
+			break;
+		tmp = arr[j].GetId();
 	}
+	//freeMemory(t);
 	return win;
 }
 void readFile(Swimming &c) {
@@ -275,23 +298,35 @@ void readFile(Swimming &c) {
 }
 void writeFile(Swimming &c, int n) {
 	ifstream fff(f, ios::in);
-
-	for (int i = 0; i < n; ++i)
-		fff >> c;
+	if (!fff) {
+		ofstream ggg(f);
+		ggg.close();
+	}
 
 	fff.close();
+	ifstream ffff(f, ios::in);
+	for (int i = 0; i < n; ++i)
+		ffff >> c;
+
+	ffff.close();
 }
 int findCnt() {
 	int cnt{ 0 };
 	Swimming tmp;
 	ifstream fff(f);
-	fff >> tmp;
-
-	while (!fff.eof()) {
-		fff >> tmp;
-		++cnt;
+	if (!fff) {
+		ofstream ggg(f);
+		ggg.close();
 	}
 	fff.close();
+	ifstream ffff(f);
+	ffff >> tmp;
+
+	while (!ffff.eof()) {
+		ffff >> tmp;
+		++cnt;
+	}
+	ffff.close();
 	return cnt;
 }
 void changeById(int id, int t) {//добавляет ко всем элементам в файле с заданныи id  заданное кол-во секунд
@@ -361,9 +396,16 @@ Swimming* initArrOfFile(int &c) {
 	c = findCnt();
 	Swimming *arr = giveMemory<Swimming>(c);
 	ifstream fff(f);
-	for (int i = 0; i < c; ++i)
-		fff >> arr[i];
+	if (!fff) {
+		ofstream ggg(f);
+		ggg.close();
+	}
+
 	fff.close();
+	ifstream ffff(f);
+	for (int i = 0; i < c; ++i)
+		ffff >> arr[i];
+	ffff.close();
 	return arr;
 }
 void outToFile(Swimming *arr, int n) {
@@ -371,5 +413,12 @@ void outToFile(Swimming *arr, int n) {
 	for (int i = 0; i < n; ++i)
 		fff << arr[i];
 	fff.close();
+}
+bool findId(Swimming* arr, int n, int id) {
+	for (int i = 0; i < n; ++i) {
+		if (arr[i].GetId() == id)
+			return true;
+	}
+	return false;
 }
 #endif
