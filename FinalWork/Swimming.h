@@ -7,7 +7,7 @@
 #include<ctime>
 #include <fstream>
 #include <cstring>
-#include <Windows.h>//обязательно для setConsole
+#include <Windows.h>//РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ setConsole
 using namespace std;
 typedef int type;
 
@@ -87,7 +87,7 @@ public:
 		this->id = c.id;
 		this->distance = c.distance;
 		freeMemory<char>(surname);
-		surname = giveMemory<char>(strlen(c.surname) + 1);
+		surname = giveMemory<char>(strlen(c.surname)+1);
 		strcpy(this->surname, c.surname);
 		this->rez = c.rez;
 		return *this;
@@ -109,7 +109,9 @@ public:
 		distance = i;
 		this->checkDistance();
 	}
-	void SetSurname(char* i)
+
+	template <class T>
+	void SetSurname(T i)
 	{
 		strcpy(surname, i);
 	}
@@ -173,11 +175,10 @@ public:
 	}
 	friend istream& operator >> (istream & os, Swimming &  c)
 	{
-
 		os >> c.surname;
 		os >> c.id;
 		os >> c.distance;
-
+		c.checkDistance();
 		os >> c.rez;
 
 		return os;
