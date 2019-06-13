@@ -84,18 +84,16 @@ public:
 	{
 		if (this == &c)
 			return *this;
-		this->id = c.id;//зачем тут this????
-		this->distance = c.distance;//зачем тут this????
-		freeMemory<char>(surname);//указывать тип не обязательно. Компилятор сам выведет его из типа параметра функции
-		surname = giveMemory<char>(strlen(c.surname)+1);
+		id = c.id;
+		distance = c.distance;
+		freeMemory(surname);
+		surname = giveMemory<char>(strlen(c.surname) + 1);
 		strcpy(this->surname, c.surname);
 		this->rez = c.rez;
 		return *this;
 	}
 	Swimming(const Swimming& c) : id{ c.id }, distance{ c.distance }, rez{ c.rez }, surname{ giveMemory<char>(strlen(c.surname) + 1) }
 	{
-		if (this == &c)// а как это может оказаться верным??????
-			return;
 		strcpy(this->surname, c.surname);
 		this->rez = c.rez;
 		return;
@@ -135,7 +133,7 @@ public:
 	{
 		return rez;
 	}
-	void Rand(int id = 10, int dist = 500, int time = 530)//что за имя? Где глагол???
+	void initRand(int id = 10, int dist = 500, int time = 530)//что за имя? Где глагол???
 	{
 		dist /= 50;
 		this->id = rand() % id + 1;
@@ -155,16 +153,11 @@ public:
 			return false;
 		return true;
 	}
-	bool operator !=(const Swimming &c) {//проще реализовать через operator ==
-		if (id != c.id)
-			return true;
-		if (rez != c.rez)
-			return true;
-		if (distance != c.distance)
-			return true;
-		if (!strcmp(surname, c.surname))
-			return true;
-		return false;
+	bool operator !=(const Swimming &c) {
+		if (*this == c)
+			return false;
+		else
+			true;
 	}
 
 
