@@ -272,7 +272,7 @@ Swimming * ResSwim(Swimming *arr, int n, int &cnt, type &aver)
 			}
 
 			++j;
-			if (j > cnt) {
+			if (j > n) {
 				f = 1;
 				break;
 			}
