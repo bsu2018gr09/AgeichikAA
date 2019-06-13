@@ -5,9 +5,11 @@
 #include <fstream>
 #include <cstring>
 #include"Swimming.h"
-#include <Windows.h>//обязательно для setConsole
+#include <Windows.h>//РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ setConsole
 using namespace std;
 
+
+bool findId(Swimming* arr, int n, int id);
 void randArr(Swimming *arr, int n, int cntid);
 int cntId(Swimming *arr, int n, int idS);
 void initSwimId(Swimming *arr1, Swimming *arr2, int n, int idS);
@@ -28,19 +30,21 @@ void changeOneEl(const Swimming& nw, int n);
 void changeOneElByEl(const Swimming& old, const Swimming& nw);
 Swimming* initArrOfFile(int &c);
 void outToFile(Swimming *arr, int n);
+void addElFile(Swimming& n);
 
 
 int main()
 {
-	SetConsoleCP(1251); // Ввод с консоли в кодировке 1251
-	SetConsoleOutputCP(1251); // Вывод на консоль в кодировке
-	int k{ 0 };//кол-во элементов
+	SetConsoleCP(1251); // Р’РІРѕРґ СЃ РєРѕРЅСЃРѕР»Рё РІ РєРѕРґРёСЂРѕРІРєРµ 1251
+	SetConsoleOutputCP(1251); // Р’С‹РІРѕРґ РЅР° РєРѕРЅСЃРѕР»СЊ РІ РєРѕРґРёСЂРѕРІРєРµ
+	int k{ 0 };//РєРѕР»-РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
 	int n;
+	//bool ffllagg{0};
 	bool flag{ true };
 	int countId{ 0 };
 	Swimming *arr = giveMemory<Swimming>(1);
 	while (1) {
-		cout << "0-выйти из меню 1 -  иницилизировать из файла 2 - рандомная иницилизация 3- сам вводишь ,4 -ничего из перечисленного не делать ";
+		cout << "0-РІС‹Р№С‚Рё РёР· РјРµРЅСЋ "<<'\n'<<"1 -  РёРЅРёС†РёР»РёР·РёСЂРѕРІР°С‚СЊ РёР· С„Р°Р№Р»Р° " << '\n' << "2 - СЂР°РЅРґРѕРјРЅР°СЏ РёРЅРёС†РёР»РёР·Р°С†РёСЏ" << '\n' << " 3- СЃР°Рј РІРІРѕРґРёС€СЊ " << '\n' << "4 -РЅРёС‡РµРіРѕ РёР· РїРµСЂРµС‡РёСЃР»РµРЅРЅРѕРіРѕ РЅРµ РґРµР»Р°С‚СЊ ";
 		while (flag)
 		{
 			cin >> n;
@@ -52,6 +56,7 @@ int main()
 			case 1:
 				freeMemory(arr);
 				arr = initArrOfFile(k);
+				if(k)
 				sortById(arr, 0, k - 1);
 				countId = cntId(arr, k);
 				cout << '\n' << k;
@@ -59,23 +64,26 @@ int main()
 				flag = false;
 				break;
 			case 2:
-				cout << "введите кол-во участников";
+				cout << "РІРІРµРґРёС‚Рµ РєРѕР»-РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ";
 				cin >> k;
 				freeMemory<Swimming>(arr);
 				arr = giveMemory<Swimming>(k);
-				cout << "кол-во заплывов";
+				cout << "РєРѕР»-РІРѕ Р·Р°РїР»С‹РІРѕРІ";
 				cin >> countId;
 				randArr(arr, k, countId);
 				flag = false;
 				break;
 			case 3:
-				cout << "введите кол-во участников";
+				cout << "РІРІРµРґРёС‚Рµ РєРѕР»-РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ";
 				cin >> k;
+				cout << "РїСЂРёРјРµСЂ: Name(РѕРґРЅРѕ СЃР»РѕРІРѕ)" << '\n' << " id" << '\n' << " distance" << '\n' << " time(РєРѕР»-РІРѕ СЃРµРєСѓРЅРґ)";
 				freeMemory(arr);
 				arr = giveMemory<Swimming>(k);
-				for (int i = 0; i < k; ++i)
+				for (int i = 0; i < k; ++i) {
 					cin >> arr[i];
-				sortById(arr, 0, k);
+					
+				}
+				sortById(arr, 0, k-1);
 				countId = cntId(arr, k);
 				flag = false;
 				break;
@@ -83,7 +91,7 @@ int main()
 				flag = false;
 				break;
 			default:
-				cout << "Неверные значения. Попробуйте еще раз";
+				cout << "РќРµРІРµСЂРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·";
 				break;
 			}
 		}
@@ -92,7 +100,7 @@ int main()
 		flag = true;
 		Swimming *arr1 = giveMemory<Swimming>(1);
 
-		cout << "1- отсортировать в нужном заплыве по результатам; 2- тройка лучших результатов в каждом заплыве 3- изменить один эл-т в файле на заданный эл 4-прибавить к каждому участнику заплва опр время 5- вывести на экран ранее иницилизированный массив 6-вывести в файл ранее иницилизированный массив ";
+		cout << "1- РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РІ РЅСѓР¶РЅРѕРј Р·Р°РїР»С‹РІРµ РїРѕ СЂРµР·СѓР»СЊС‚Р°С‚Р°Рј;" << '\n' << " 2- С‚СЂРѕР№РєР° Р»СѓС‡С€РёС… СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РІ РєР°Р¶РґРѕРј Р·Р°РїР»С‹РІРµ " << '\n' << "3- РёР·РјРµРЅРёС‚СЊ РѕРґРёРЅ СЌР»-С‚ РІ С„Р°Р№Р»Рµ РЅР° Р·Р°РґР°РЅРЅС‹Р№ СЌР» " << '\n' << "4-РїСЂРёР±Р°РІРёС‚СЊ Рє РєР°Р¶РґРѕРјСѓ СѓС‡Р°СЃС‚РЅРёРєСѓ Р·Р°РїР»РІР° РѕРїСЂ РІСЂРµРјСЏ" << '\n' << " 5- РІС‹РІРµСЃС‚Рё РЅР° СЌРєСЂР°РЅ СЂР°РЅРµРµ РёРЅРёС†РёР»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ РјР°СЃСЃРёРІ" << '\n' << " 6-РІС‹РІРµСЃС‚Рё РІ С„Р°Р№Р» СЂР°РЅРµРµ РёРЅРёС†РёР»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ РјР°СЃСЃРёРІ " << '\n' << "7- РґРѕР±Р°РІРёС‚СЊ СЌР»-С‚ РІ С„Р°Р№Р»";
 
 		int aver{ 0 };
 		int b{ 0 };
@@ -108,44 +116,47 @@ int main()
 
 			{
 			case 1:
-				while (1) {
-					cout << "номер заплыва";
-					cin >> b;
-					if (b > countId) // номер заплыва
-						cout << "Такого заплыва нет";
-					else
-						break;
-				}
-
+					while (1) {
+						cout << "РЅРѕРјРµСЂ Р·Р°РїР»С‹РІР°";
+						cin >> b;
+						if (findId(arr,k,b)) // РЅРѕРјРµСЂ Р·Р°РїР»С‹РІР°
+							break;
+						else
+							cout << "РўР°РєРѕРіРѕ Р·Р°РїР»С‹РІР° РЅРµС‚"; 
+					}
+				
+				
 				freeMemory(arr1);
 				arr1 = Swim(arr, k, b, cnt);
 				flag = false;
 				break;
 			case 2:
-				cnt = countId * 3;
-				freeMemory(arr1);
-				arr1 = ResSwim(arr, k, countId, aver);
+				if (k) {
+					cnt = countId * 3;
+					freeMemory(arr1);
+					arr1 = ResSwim(arr, k, countId, aver);
+				}
 				flag = false;
 				break;
 			case 3:
-				cout << "участника которого надо заменить";
+				cout << "СѓС‡Р°СЃС‚РЅРёРєР° РєРѕС‚РѕСЂРѕРіРѕ РЅР°РґРѕ Р·Р°РјРµРЅРёС‚СЊ";
 				cin >> a3;
-				cout << "участника на которого надо заменить";
+				cout << "СѓС‡Р°СЃС‚РЅРёРєР° РЅР° РєРѕС‚РѕСЂРѕРіРѕ РЅР°РґРѕ Р·Р°РјРµРЅРёС‚СЊ";
 				cin >> b3;
 				changeOneElByEl(a3, b3);
 				flag = false;
 				break;
 			case 4:
-				cout << "номер заплыва";
+				cout << "РЅРѕРјРµСЂ Р·Р°РїР»С‹РІР°";
 				while (1) {
 					cin >> b;
 
-					if (b > countId) // номер заплыва
-						cout << "Такого заплыва нет";
+					if (b > countId) // РЅРѕРјРµСЂ Р·Р°РїР»С‹РІР°
+						cout << "РўР°РєРѕРіРѕ Р·Р°РїР»С‹РІР° РЅРµС‚";
 					else
 						break;
 				}
-				cout << "доп время";
+				cout << "РґРѕРї РІСЂРµРјСЏ";
 				cin >> dif;
 				changeById(b, dif);
 				flag = false;
@@ -158,8 +169,13 @@ int main()
 				outToFile(arr, k);
 				flag = false;
 				break;
+			case 7:
+				cin >> a3;
+				addElFile(a3);
+				flag = false;
+				break;
 			default:
-				cout << "Неверные значения. Попробуйте еще раз";
+				cout << "РќРµРІРµСЂРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·";
 				break;
 			}
 		}
@@ -179,11 +195,15 @@ int main()
 				outToFile(arr1, cnt);
 				break;
 			default:
-				cout << "Неверные значения. Попробуйте еще раз";
+				if(!n)
+
+				cout << "РќРµРІРµСЂРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·";
 				break;
 			}
 
 		}
 		flag = true;
 	}
+	
+	freeMemory(arr);
 }
