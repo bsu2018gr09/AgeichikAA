@@ -9,7 +9,7 @@
 #include <cstring>
 #include"Swimming.h"
 #include <Windows.h>//обязательно для setConsole
-char f[] = "D:\\VisualStudio project\\7-1\\filye.txt";
+char f[] = "D:\\VisualStudio project\\7-1\\file.bin";
 
 
 void randArr(Swimming *arr, int n, int cntid);
@@ -203,7 +203,7 @@ void printArr(Swimming *arr, int cnt)
 		cout << arr[i] << '\n';
 }
 void addElFile(Swimming& n) {
-	ofstream fff(f, ios::app);
+	ofstream fff(f, ios::app | ios::binary);
 	fff << n;
 	fff.close();
 }
@@ -291,20 +291,20 @@ Swimming * ResSwim(Swimming *arr, int n, int &cnt, type &aver)
 	return win;
 }
 void readFile(Swimming &c) {
-	ofstream fff(f, ios::in | ios::out | ios::app);
+	ofstream fff(f, ios::in | ios::out | ios::app | ios::binary);
 	fff << c;
 	fff.close();
 	//cout << "haha";
 }
 void writeFile(Swimming &c, int n) {
-	ifstream fff(f, ios::in);
+	ifstream fff(f, ios::in| ios::binary);
 	if (!fff) {
 		ofstream ggg(f);
 		ggg.close();
 	}
 
 	fff.close();
-	ifstream ffff(f, ios::in);
+	ifstream ffff(f, ios::in| ios::binary);
 	for (int i = 0; i < n; ++i)
 		ffff >> c;
 
@@ -313,13 +313,13 @@ void writeFile(Swimming &c, int n) {
 int findCnt() {
 	int cnt{ 0 };
 	Swimming tmp;
-	ifstream fff(f);
+	ifstream fff(f , ios::binary);
 	if (!fff) {
 		ofstream ggg(f);
 		ggg.close();
 	}
 	fff.close();
-	ifstream ffff(f);
+	ifstream ffff(f , ios::binary);
 	ffff >> tmp;
 
 	while (!ffff.eof()) {
@@ -330,7 +330,7 @@ int findCnt() {
 	return cnt;
 }
 void changeById(int id, int t) {//добавляет ко всем элементам в файле с заданныи id  заданное кол-во секунд
-	ifstream fff(f);
+	ifstream fff(f , ios::binary);
 	int a{ 0 };
 	int cnt = findCnt();
 	Swimming *tmp = giveMemory<Swimming>(cnt);
@@ -342,10 +342,10 @@ void changeById(int id, int t) {//добавляет ко всем элемен�
 		}
 	}
 	fff.close();
-	ofstream kk(f, ios::trunc);
+	ofstream kk(f, ios::trunc | ios::binary);
 	kk << tmp[3];
 	kk.close();
-	ofstream ggg(f);
+	ofstream ggg(f ,ios::binary);
 	for (int i = 0; i < cnt; ++i)
 		ggg << tmp[i];
 	ggg.close();
@@ -353,7 +353,7 @@ void changeById(int id, int t) {//добавляет ко всем элемен�
 }
 void changeOneEl(const Swimming& nw, int n) {
 	Swimming *tmp = giveMemory<Swimming>(1000);
-	ifstream fff(f);
+	ifstream fff(f , ios::binary);
 	for (int i = 0; i < n; ++i)
 		fff >> tmp[i];
 	tmp[n] = nw;
@@ -367,7 +367,7 @@ void changeOneEl(const Swimming& nw, int n) {
 			break;
 	}
 	fff.close();
-	ofstream ggg(f, ios::trunc);
+	ofstream ggg(f, ios::trunc | ios::binary);
 	for (int i = 0; i < cnt; ++i)
 		ggg << tmp[i];
 	ggg.close();
@@ -395,21 +395,21 @@ void changeOneElByEl(const Swimming& old, const Swimming& nw) {
 Swimming* initArrOfFile(int &c) {
 	c = findCnt();
 	Swimming *arr = giveMemory<Swimming>(c);
-	ifstream fff(f);
+	ifstream fff(f, ios::binary);
 	if (!fff) {
-		ofstream ggg(f);
+		ofstream ggg(f,  ios::binary);
 		ggg.close();
 	}
 
 	fff.close();
-	ifstream ffff(f);
+	ifstream ffff(f,  ios::binary);
 	for (int i = 0; i < c; ++i)
 		ffff >> arr[i];
 	ffff.close();
 	return arr;
 }
 void outToFile(Swimming *arr, int n) {
-	ofstream fff(f, ios::trunc);
+	ofstream fff(f, ios::trunc| ios::binary);
 	for (int i = 0; i < n; ++i)
 		fff << arr[i];
 	fff.close();
